@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigos do Bem - Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css">
+    <style>
+        /* Barra de sessão discreta no topo */
+        .session-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .session-user {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #718096;
+        }
+        .btn-session-exit {
+            background-color: transparent;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-session-exit:hover {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+
+        /* Estética clássica centralizada do Portal */
+        .portal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .brand-logo-img {
+            max-width: 220px;
+            height: auto;
+            display: block;
+            margin: 0 auto 16px auto;
+        }
+        .portal-subtitle {
+            color: #4a5568;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        .portal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        /* CORES INDIVIDUAIS DOS BOTÕES DO MENU */
+        .btn-cadastrar-fornecedor {
+            background-color: #f7941d !important; /* Laranja Amigos do Bem */
+            color: #ffffff !important;
+        }
+        .btn-cadastrar-fornecedor:hover {
+            background-color: #e07e0c !important;
+        }
+
+        .btn-calculadora-lote {
+            background-color: #0056b3 !important; /* Azul Principal */
+            color: #ffffff !important;
+        }
+        .btn-calculadora-lote:hover {
+            background-color: #004085 !important;
+        }
+
+        .btn-dashboard-geral {
+            background-color: #003865 !important; /* Azul Marinho Institucional */
+            color: #ffffff !important;
+        }
+        .btn-dashboard-geral:hover {
+            background-color: #002240 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-card">
+        <!-- BARRA DISCRETA DE ACESSO -->
+        <div class="session-bar">
+            <span id="userLogadoTexto" class="session-user">Sessão ativa</span>
+            <button type="button" class="btn-session-exit" onclick="encerrarSessao()">Sair</button>
+        </div>
+
+        <!-- CABEÇALHO DO PORTAL -->
+        <div class="portal-header">
+            <img src="logo-adb.png" alt="Logo Amigos do Bem" class="brand-logo-img">
+            <h1 class="page-title">Controle de Qualidade</h1>
+            <p class="portal-subtitle">Portal de Ferramentas de Teste. Selecione uma opção para continuar:</p>
+        </div>
+
+        <!-- BOTÕES CLÁSSICOS DE NAVEGAÇÃO COLORIDOS INDIVIDUALMENTE -->
+        <div class="portal-buttons">
+            <a href="cadastro.html" class="btn-calc btn-cadastrar-fornecedor" style="text-align: center; text-decoration: none; display: block;">
+                Cadastrar Fornecedor
+            </a>
+            <a href="calculadora.html" class="btn-calc btn-calculadora-lote" style="text-align: center; text-decoration: none; display: block;">
+                Calculadora
+            </a>
+            <a href="dashboard.html" class="btn-calc btn-dashboard-geral" style="text-align: center; text-decoration: none; display: block;">
+                Dashboard Geral
+            </a>
+        </div>
+    </div>
+
+    <!-- FIREBASE AUTH SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script>
+        
+
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                const el = document.getElementById("userLogadoTexto");
+                if (el) el.innerText = user.email || "Operador";
+            }
+        });
+
+        async function encerrarSessao() {
+            try {
+                await auth.signOut();
+                window.location.replace("login.html");
+            } catch (err) {
+                alert("Erro ao encerrar sessão: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

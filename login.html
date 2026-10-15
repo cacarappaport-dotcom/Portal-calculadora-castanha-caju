@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso - Controle de Qualidade Amigos do Bem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css">
+    <style>
+        .login-box {
+            max-width: 440px;
+            width: 100%;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .login-input-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+        .login-input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #003366;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .login-alert {
+            display: none;
+            background-color: #fdedec;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-card login-box">
+        <div class="header-area">
+            <h1 class="page-title">Controle de Qualidade</h1>
+            <p style="color: #718096; font-weight: 700; margin-top: 6px;">Amigos do Bem — Acesso Operacional</p>
+        </div>
+
+        <div id="msgErro" class="login-alert"></div>
+
+        <form id="formLogin" onsubmit="realizarLogin(event)">
+            <div class="login-input-group">
+                <label for="email">E-mail Corporativo</label>
+                <input type="email" id="email" placeholder="ex: qualidade@amigosdobem.org" required autofocus>
+            </div>
+
+            <div class="login-input-group">
+                <label for="senha">Senha de Acesso</label>
+                <input type="password" id="senha" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" id="btnEntrar" class="btn-calc" style="margin-top: 10px;">
+                Entrar no Sistema
+            </button>
+        </form>
+    </div>
+
+    <!-- FIREBASE AUTH SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script>
+
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.replace("index.html");
+            }
+        });
+
+        async function realizarLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value.trim();
+            const senha = document.getElementById("senha").value;
+            const btn = document.getElementById("btnEntrar");
+            const boxErro = document.getElementById("msgErro");
+
+            boxErro.style.display = "none";
+            btn.disabled = true;
+            btn.innerText = "A autenticar...";
+
+            try {
+                await auth.signInWithEmailAndPassword(email, senha);
+                window.location.replace("index.html");
+            } catch (err) {
+                console.error("Erro de login:", err);
+                boxErro.style.display = "block";
+                if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+                    boxErro.innerText = "E-mail ou senha incorretos. Verifique e tente novamente.";
+                } else {
+                    boxErro.innerText = "Erro ao autenticar: " + err.message;
+                }
+                btn.disabled = false;
+                btn.innerText = "Entrar no Sistema";
+            }
+        }
+    </script>
+</body>
+</html>

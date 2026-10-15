@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Fornecedores - Amigos do Bem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css">
+    <style>
+        .session-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .session-user {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #718096;
+        }
+        .btn-session-exit {
+            background-color: transparent;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-session-exit:hover {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .field-group label {
+            display: block;
+            font-weight: 800;
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .field-group input,
+        .field-group select {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #2d3748;
+            font-family: inherit;
+            font-weight: 700;
+            outline: none;
+            box-sizing: border-box;
+            height: 44px;
+        }
+        .field-group input:focus,
+        .field-group select:focus {
+            border-color: #0056b3;
+            background-color: #fcfdf3;
+        }
+        .field-group select {
+            cursor: pointer;
+        }
+        .btn-delete-forn {
+            background-color: #fdedec;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete-forn:hover {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+        @media (max-width: 650px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-card" style="max-width: 1000px;">
+        <!-- BARRA DE SESSÃO -->
+        <div class="session-bar">
+            <span id="userLogadoTexto" class="session-user">Sessão ativa</span>
+            <button type="button" class="btn-session-exit" onclick="encerrarSessao()">Sair</button>
+        </div>
+
+        <div class="header-area">
+            <h1 class="page-title">Gestão de Fornecedores</h1>
+            <p style="color: #718096; font-weight: 700; margin-top: 6px;">Cadastro de Produtores e Cooperativas</p>
+        </div>
+
+        <!-- FORMULÁRIO -->
+        <form id="formNovoFornecedor" onsubmit="cadastrarFornecedor(event)">
+            <div class="form-grid">
+                <div class="field-group full-width">
+                    <label for="nomeFornecedor">Razão Social / Nome do Produtor:</label>
+                    <input type="text" id="nomeFornecedor" placeholder="ex: Cooperativa Agropecuária do Ceará" required>
+                </div>
+                <div class="field-group">
+                    <label for="cnpjFornecedor">CNPJ / CPF:</label>
+                    <input type="text" id="cnpjFornecedor" placeholder="00.000.000/0000-00" maxlength="18" required>
+                </div>
+                <div class="field-group">
+                    <label for="cidadeFornecedor">Cidade:</label>
+                    <input type="text" id="cidadeFornecedor" placeholder="ex: Mauriti" required>
+                </div>
+                <div class="field-group">
+                    <label for="estadoFornecedor">Estado (UF):</label>
+                    <select id="estadoFornecedor" required>
+                        <option value="">Selecione o Estado...</option>
+                        <optgroup label="Principais Produtores">
+                            <option value="CE" selected>CE - Ceará</option>
+                            <option value="PI">PI - Piauí</option>
+                            <option value="RN">RN - Rio Grande do Norte</option>
+                            <option value="BA">BA - Bahia</option>
+                            <option value="MA">MA - Maranhão</option>
+                            <option value="PE">PE - Pernambuco</option>
+                        </optgroup>
+                        <optgroup label="Demais Estados">
+                            <option value="AC">AC - Acre</option>
+                            <option value="AL">AL - Alagoas</option>
+                            <option value="AP">AP - Amapá</option>
+                            <option value="AM">AM - Amazonas</option>
+                            <option value="DF">DF - Distrito Federal</option>
+                            <option value="ES">ES - Espírito Santo</option>
+                            <option value="GO">GO - Goiás</option>
+                            <option value="MT">MT - Mato Grosso</option>
+                            <option value="MS">MS - Mato Grosso do Sul</option>
+                            <option value="MG">MG - Minas Gerais</option>
+                            <option value="PA">PA - Pará</option>
+                            <option value="PB">PB - Paraíba</option>
+                            <option value="PR">PR - Paraná</option>
+                            <option value="RJ">RJ - Rio de Janeiro</option>
+                            <option value="RS">RS - Rio Grande do Sul</option>
+                            <option value="RO">RO - Rondônia</option>
+                            <option value="RR">RR - Roraima</option>
+                            <option value="SC">SC - Santa Catarina</option>
+                            <option value="SP">SP - São Paulo</option>
+                            <option value="SE">SE - Sergipe</option>
+                            <option value="TO">TO - Tocantins</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label for="contatoFornecedor">Telefone / E-mail de Contato:</label>
+                    <input type="text" id="contatoFornecedor" placeholder="(88) 99999-9999" maxlength="15">
+                </div>
+            </div>
+
+            <div class="button-group" style="margin-top: 10px;">
+                <button type="submit" id="btnSalvarForn" class="btn-calc" style="background-color: #27ae60;">
+                    ➕ Cadastrar Fornecedor na Nuvem
+                </button>
+            </div>
+        </form>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1.5px solid #edf2f7;">
+
+        <!-- LISTAGEM -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="color: #003366; font-weight: 900;">Fornecedores Registrados</h3>
+            <span id="totalFornSpan" style="font-weight: 800; color: #0056b3;">A consultar...</span>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="table-header-sub">Fornecedor</th>
+                        <th class="table-header-sub">CNPJ/CPF</th>
+                        <th class="table-header-sub">Cidade / UF</th>
+                        <th class="table-header-sub">Contato</th>
+                        <th class="table-header-sub">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaFornecedoresCorpo">
+                    <tr><td colspan="5" style="text-align: center; color: #718096; padding: 25px;">A carregar lista de fornecedores...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="button-group" style="margin-top: 25px;">
+            <a href="index.html" class="btn-back">Voltar para o Início</a>
+        </div>
+    </div>
+
+    <!-- FIREBASE SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        
+
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                const el = document.getElementById("userLogadoTexto");
+                if (el) el.innerText = user.email || "Operador";
+            }
+        });
+
+        async function encerrarSessao() {
+            await auth.signOut();
+            window.location.replace("login.html");
+        }
+
+        // MÁSCARA AUTOMÁTICA DE CNPJ/CPF
+        const inputCnpj = document.getElementById("cnpjFornecedor");
+        if (inputCnpj) {
+            inputCnpj.addEventListener("input", function (e) {
+                let v = e.target.value.replace(/\D/g, "");
+                if (v.length <= 11) {
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                } else {
+                    v = v.slice(0, 14);
+                    v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+                    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+                    v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+                    v = v.replace(/(\d{4})(\d)/, "$1-$2");
+                }
+                e.target.value = v;
+            });
+        }
+
+        // MÁSCARA AUTOMÁTICA DE TELEFONE
+        const inputContato = document.getElementById("contatoFornecedor");
+        if (inputContato) {
+            inputContato.addEventListener("input", function (e) {
+                let v = e.target.value.replace(/\D/g, "");
+                if (v.length > 11) v = v.slice(0, 11);
+                
+                if (v.length > 10) {
+                    // Celular com 9 dígitos: (00) 00000-0000
+                    v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+                } else if (v.length > 6) {
+                    // Telefone fixo ou início de celular: (00) 0000-0000
+                    v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+                } else if (v.length > 2) {
+                    // Apenas DDD digitado: (00) 0000
+                    v = v.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                } else if (v.length > 0) {
+                    // Iniciando DDD: (00
+                    v = v.replace(/^(\d{0,2})/, "($1");
+                }
+                e.target.value = v;
+            });
+        }
+
+        async function carregarListaFornecedores() {
+            const corpo = document.getElementById("tabelaFornecedoresCorpo");
+            const totalSpan = document.getElementById("totalFornSpan");
+
+            try {
+                const snapshot = await db.collection("fornecedores").orderBy("nome", "asc").get();
+                totalSpan.innerText = `${snapshot.size} fornecedor(es)`;
+
+                if (snapshot.empty) {
+                    corpo.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #718096; padding: 25px;">Nenhum fornecedor cadastrado até o momento.</td></tr>`;
+                    return;
+                }
+
+                corpo.innerHTML = snapshot.docs.map(doc => {
+                    const f = doc.data();
+                    const docId = doc.id;
+                    const cidadeUf = (f.cidade && f.estado) ? `${f.cidade} - ${f.estado}` : (f.regiao || "-");
+
+                    return `
+                        <tr>
+                            <td><strong>${f.nome}</strong></td>
+                            <td style="font-family: monospace; font-size: 0.9rem;">${f.cnpj || "-"}</td>
+                            <td>${cidadeUf}</td>
+                            <td>${f.contato || "-"}</td>
+                            <td style="text-align: center;">
+                                <button type="button" class="btn-delete-forn" onclick="excluirFornecedor('${docId}', '${f.nome}')">
+                                    🗑️ Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error("Erro ao carregar fornecedores:", err);
+                totalSpan.innerText = "Erro";
+                corpo.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #c0392b; padding: 25px;">Erro ao carregar do Firestore: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function cadastrarFornecedor(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnSalvarForn");
+            const nome = document.getElementById("nomeFornecedor").value.trim();
+            const cnpj = document.getElementById("cnpjFornecedor").value.trim();
+            const cidade = document.getElementById("cidadeFornecedor").value.trim();
+            const estado = document.getElementById("estadoFornecedor").value.trim().toUpperCase();
+            const contato = document.getElementById("contatoFornecedor").value.trim();
+
+            if (!nome || !cnpj || !cidade || !estado) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "A guardar na nuvem...";
+
+            try {
+                await db.collection("fornecedores").add({
+                    nome: nome,
+                    cnpj: cnpj,
+                    cidade: cidade,
+                    estado: estado,
+                    contato: contato,
+                    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert("✓ Fornecedor cadastrado com sucesso!");
+                document.getElementById("formNovoFornecedor").reset();
+                await carregarListaFornecedores();
+            } catch (err) {
+                console.error("Erro ao salvar:", err);
+                alert("Erro ao salvar fornecedor: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "➕ Cadastrar Fornecedor na Nuvem";
+            }
+        }
+
+        async function excluirFornecedor(docId, nome) {
+            const confirmou = confirm(`⚠️ Deseja realmente excluir o fornecedor "${nome}"?\n\nEsta ação apagará o cadastro da nuvem.`);
+            if (!confirmou) return;
+
+            try {
+                await db.collection("fornecedores").doc(docId).delete();
+                alert("✓ Fornecedor excluído com sucesso!");
+                await carregarListaFornecedores();
+            } catch (err) {
+                console.error("Erro ao excluir fornecedor:", err);
+                alert("Erro ao excluir do Firestore: " + err.message);
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", carregarListaFornecedores);
+    </script>
+</body>
+</html>
